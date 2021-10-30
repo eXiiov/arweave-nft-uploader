@@ -18,7 +18,7 @@ def main():
                         help='Force upload all assets, even the ones that have already been uploaded')
     parser.add_argument('--assets-from-json', action='store_true',
                         help='If this flag is specified, assets file names are read from properties.files.uri/type'
-                             ' (e.g. for uploading both png and svg), instead of the default pair NNN.json/NNN.png')
+                             ' (e.g. for uploading both gif and svg), instead of the default pair NNN.json/NNN.gif')
     parser.add_argument('directory', help='Directory containing images named from 0-n')
     args = parser.parse_args()
     levels = [logging.INFO, logging.DEBUG]
@@ -53,14 +53,14 @@ def main():
         logging.error("")
         logging.error("Cache file " + str(cache_filename) + " is not initialized with a candy machine program")
         logging.error("")
-        logging.error("You must initialize the candy machine program with a single 0.json and 0.png file,")
+        logging.error("You must initialize the candy machine program with a single 0.json and 0.gif file,")
         logging.error("specifying the total number of NFTs with the -n option, like this:")
         logging.error("")
         logging.error("ts-node ~/metaplex-foundation/metaplex/js/packages/cli/src/candy-machine-cli.ts"
                       " upload <single asset dir> -n {} --keypair <keypair file> --env <env name>".format(
             len(jsonfiles)))
         logging.error("")
-        logging.error("*** It is VERY important that <single asset dir> ONLY contains 0.json and 0.png ***")
+        logging.error("*** It is VERY important that <single asset dir> ONLY contains 0.json and 0.gif ***")
         logging.error("*** to avoid uploading all the assets with candy-machine-cli.ts                 ***")
         sys.exit(1)
 
@@ -126,12 +126,12 @@ def main():
                     else:
                         raise Exception("Can't find asset file: " + str(asset_file))
             else:
-                asset_file = jsonfile.replace(".json", ".png")
+                asset_file = jsonfile.replace(".json", ".gif")
                 if os.path.isfile(asset_file):
-                    asset_files = [{"file": asset_file, "type": "image/png", "idx": 0}]
+                    asset_files = [{"file": asset_file, "type": "image/gif", "idx": 0}]
                 else:
                     raise Exception("Can't find asset file: " + str(asset_file))
-                asset_data["properties"]["files"] = [{"uri": "", "type": "image/png"}]
+                asset_data["properties"]["files"] = [{"uri": "", "type": "image/gif"}]
         except Exception as ex:
             logging.error(ex)
             logging.error("Can't find all assets for json file: " + str(jsonfile) + ", skipping")
@@ -154,7 +154,7 @@ def main():
                     txdict = tx.to_dict()
                     uri = "https://arweave.net/{}?ext={}".format(txdict["id"], asset_fileext)
                     asset_data["properties"]["files"][asset["idx"]]["uri"] = uri
-                    if not has_asset_image and asset_fileext == "png":
+                    if not has_asset_image and asset_fileext == "gif":
                         has_asset_image = True
                         asset_data["image"] = uri
             if not has_asset_image:
